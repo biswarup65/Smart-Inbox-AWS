@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Smart Inbox Dashboard</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: #f5f7fb;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(90deg, #5f2c82, #49a09d);
+    color: white;
+    padding: 20px 40px;
+}
+
+.header h1 {
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.queue-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.high {
+    border-left: 6px solid #e74c3c;
+}
+
+.normal {
+    border-left: 6px solid #2ecc71;
+}
+
+.sentiment {
+    float: right;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    color: white;
+}
+
+.negative { background: #e74c3c; }
+.neutral { background: #3498db; }
+.positive { background: #2ecc71; }
+
+.sidebar {
+    width: 300px;
+}
+
+.feed {
+    flex: 1;
+}
+
+/* Status Panel */
+.status {
+    background: white;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+    <h1>📥 Smart Inbox</h1>
+    <p>Real-time sentiment analysis powered by AWS</p>
+</div>
+
+<div class="container">
+
+    <!-- LEFT SIDE -->
+    <div class="feed">
+        <h2>1. Live Sentiment Feed</h2>
+
+        <div id="highPriority"></div>
+        <div id="normalQueue"></div>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="sidebar">
+        <div class="status">
+            <h3>2. Connection Status</h3>
+            <p id="lastFetch">Last fetched: --</p>
+
+            <h4>Powered by</h4>
+            <ul>
+                <li>✅ Amazon Comprehend</li>
+                <li>✅ SQS</li>
+                <li>✅ API Gateway + Lambda</li>
+            </ul>
+
+            <h4>How to test</h4>
+            <p>Upload a .txt file into S3 → /incoming/ folder</p>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+const API_URL = "https://z7t92xtygg.execute-api.us-east-1.amazonaws.com/messages";
+
+/* Create message card */
+function createCard(message, type) {
+    let body = JSON.parse(message.Body);
+
+    return `
+    <div class="card ${type}">
+        <span class="sentiment ${body.sentiment.toLowerCase()}">
+            ${body.sentiment}
+        </span>
+
+        <strong>${body.file}</strong>
+
+        <p>${body.text}</p>
+
+        <small>
+            ⏱ ${new Date(body.timestamp).toLocaleString()}
+        </small>
+
+        <br/>
+
+        <small>
+            👍 Positive: ${(body.scores.Positive * 100).toFixed(1)}% |
+            👎 Negative: ${(body.scores.Negative * 100).toFixed(1)}% |
+            😐 Neutral: ${(body.scores.Neutral * 100).toFixed(1)}%
+        </small>
+    </div>
+    `;
+}
+
+/* Load Data */
+async function loadData() {
+    try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+
+        document.getElementById("lastFetch").innerText =
+            "Last fetched: " + new Date().toLocaleTimeString();
+
+        document.getElementById("highPriority").innerHTML =
+            "<h3>🔴 High Priority Queue</h3>" +
+            data.highPriority.map(m => createCard(m, "high")).join("");
+
+        document.getElementById("normalQueue").innerHTML =
+            "<h3>🟢 Normal Queue</h3>" +
+            data.normal.map(m => createCard(m, "normal")).join("");
+
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+/* Auto refresh */
+loadData();
+setInterval(loadData, 5000);
+
+</script>
+
+</body>
+</html>

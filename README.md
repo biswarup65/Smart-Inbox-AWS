@@ -64,7 +64,7 @@ This project follows an **event-driven, serverless architecture**:
 
 ## 💻 Frontend Dashboard
 
-![Frontend Dashboard UI](https://github.com/biswarup65/Smart-Inbox-AWS/blob/main/screenshots/Frontend_Dashboard_ScreenRecording.mp4)
+[Watch here](https://drive.google.com/file/d/1COZZbfjFB11EH2E_BNNb_vc94DnhWSYE/view?usp=sharing)
 ---
 
 ## 🧪 How to Test

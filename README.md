@@ -17,7 +17,7 @@ To solve this, I built a **Serverless Smart Inbox System** using AWS that automa
 
 This project follows an **event-driven, serverless architecture**:
 
-![Project Banner]()
+![Project Banner](https://github.com/biswarup65/Smart-Inbox-AWS/blob/main/screenshots/serverless-smart-inbox-with-seniment-analysis-architecture.png)
 
 ---
 

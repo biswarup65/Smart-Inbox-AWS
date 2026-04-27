@@ -104,5 +104,6 @@ This project follows an **event-driven, serverless architecture**:
 
 ## 🔚 Conclusion
 
-This project demonstrates how a fully serverless, event-driven architecture on AWS can be used to solve real-world business problems efficiently. By integrating services like S3, Lambda, Comprehend, and SQS, the system automates message classification and prioritization in real time. The addition of a CloudFront-hosted dashboard provides clear visibility into operations, making the solution both practical and scalable for modern customer support workflows.
+This project demonstrates how a fully serverless, event-driven architecture on AWS can be used to solve real-world business problems efficiently. By integrating services like S3, Lambda, Comprehend, and SQS, the system automates message classification and prioritization in real time.
+The addition of a CloudFront-hosted dashboard provides clear visibility into operations, making the solution both practical and scalable for modern customer support workflows.
 
